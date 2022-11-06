@@ -23,7 +23,7 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 import { data, states } from './makeData';
 
-export type Person = {
+type Person = {
   id: string;
   firstName: string;
   lastName: string;
@@ -214,7 +214,7 @@ const Items: FC = () => {
 };
 
 //example of creating a mui dialog modal for creating new rows
-export const CreateNewAccountModal: FC<{
+ const CreateNewAccountModal: FC<{
   columns: MRT_ColumnDef<Person>[];
   onClose: () => void;
   onSubmit: (values: Person) => void;
