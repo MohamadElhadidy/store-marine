@@ -3,6 +3,7 @@ import { AiOutlineLogout, AiOutlineUser, AiFillAppstore, AiOutlineBars } from 'r
 import { FaStoreAlt } from 'react-icons/fa'
 import Link from 'next/link';
 
+
 export default function Navbar() {
   return (
     <header className="container mx-auto px-4 w-full py-6 flex items-center justify-between shadow shadow-black">
@@ -10,7 +11,7 @@ export default function Navbar() {
       <nav className='hidden md:block '>
         <ul className="flex items-center justify-center font-semibold">
           <li className="relative group px-3 py-2 cursor-pointer">
-            <button className=" group-hover:text-blue-600 cursor-default text-xl">الأصناف</button>
+            <button className=" group-hover:text-blue-600 cursor-default text-xl">البيانات</button>
             <div
               className="absolute top-0 -left-48 transition group-hover:translate-y-5 translate-y-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible duration-500 ease-in-out group-hover:transform z-50 min-w-[300px] transform">
               <div className="relative top-6 p-6 bg-white rounded-xl shadow-xl w-full">
@@ -18,79 +19,25 @@ export default function Navbar() {
                   <div>
                     <ul className="mt-3 text-[15px]">
                       <li>
-
-                        <Link href="/items/add"
-                          className="block p-2 border-[1px] border-black mb-2 text-bold  -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600" >
-                          إضافة صنف
-                          <p className="text-gray-500 font-normal"> لإضافة صنف جديد</p>
+                        <Link href="/items"
+                          className="block border-[1px] mb-2  border-black  p-2 -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600">
+                          الأصناف
+                          <p className="text-gray-500 font-normal"> لإضافة -  تعديل - حذف الأصناف </p>
                         </Link>
 
                       </li>
                       <li>
-
-                        <a
-                          className="block border-[1px]  border-black  p-2 -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600">
-                          <Link href="/items" >   تقرير حصر الأصناف</Link>
-                          <p className="text-gray-500 font-normal"> لطباعة - تعديل - حذف الأصناف</p>
-                        </a>
-
-                      </li>
-                    </ul>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </li>
-          <li className="relative group px-3 py-2 cursor-pointer">
-            <button className=" group-hover:text-blue-600 cursor-default text-xl">الموردين</button>
-            <div
-              className="absolute top-0 -left-48 transition group-hover:translate-y-5 translate-y-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible duration-500 ease-in-out group-hover:transform z-50 min-w-[300px] transform">
-              <div className="relative top-6 p-6 bg-white rounded-xl shadow-xl w-full">
-                <div className="relative z-10">
-                  <div>
-                    <ul className="mt-3 text-[15px]">
-                      <li>
                         <a href="#"
-                          className="block p-2 border-[1px] border-black mb-2 text-bold  -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600" >
-                          إضافة مورد
-                          <p className="text-gray-500 font-normal"> لإضافة مورد جديد</p>
+                          className="block border-[1px] mb-2  border-black  p-2 -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600">
+                            الموردين
+                          <p className="text-gray-500 font-normal"> لإضافة - تعديل - حذف الموردين</p>
                         </a>
                       </li>
                       <li>
                         <a href="#"
                           className="block border-[1px]  border-black  p-2 -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600">
-                          تقرير حصر الموردين
-                          <p className="text-gray-500 font-normal"> لطباعة - تعديل - حذف الموردين</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </li>
-          <li className="relative group px-3 py-2 cursor-pointer">
-            <button className=" group-hover:text-blue-600 cursor-default text-xl">الورش الخارجية</button>
-            <div
-              className="absolute top-0 -left-48 transition group-hover:translate-y-5 translate-y-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible duration-500 ease-in-out group-hover:transform z-50 min-w-[300px] transform">
-              <div className="relative top-6 p-6 bg-white rounded-xl shadow-xl w-full">
-                <div className="relative z-10">
-                  <div>
-                    <ul className="mt-3 text-[15px]">
-                      <li>
-                        <a href="#"
-                          className="block p-2 border-[1px] border-black mb-2 text-bold  -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600" >
-                          إضافة ورشة خارجية
-                          <p className="text-gray-500 font-normal"> لإضافة ورشة خارجية</p>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#"
-                          className="block border-[1px]  border-black  p-2 -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600">
-                          تقرير حصر الورش الخارجية
-                          <p className="text-gray-500 font-normal"> لطباعة - تعديل - حذف الورش الخارجية</p>
+                          الورش الخارجية
+                          <p className="text-gray-500 font-normal"> لإضافة - تعديل - حذف الورش الخارجية</p>
                         </a>
                       </li>
                     </ul>
@@ -132,6 +79,27 @@ export default function Navbar() {
                           className="block border-[1px]  border-black  p-2 -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600">
                           طباعة  مستند
                           <p className="text-gray-500 font-normal"> لطباعة وتعديل وحذف مستند (  الدخول - الخروج - صيانة خارجية) </p>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </li>
+          <li className="relative group px-3 py-2 cursor-pointer">
+            <button className=" group-hover:text-blue-600 cursor-default text-xl">التقارير</button>
+            <div
+              className="absolute top-0 -left-48 transition group-hover:translate-y-5 translate-y-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible duration-500 ease-in-out group-hover:transform z-50 min-w-[300px] transform">
+              <div className="relative top-6 p-6 bg-white rounded-xl shadow-xl w-full">
+                <div className="relative z-10">
+                  <div>
+                    <ul className="mt-3 text-[15px]">
+                      <li>
+                        <a href="#"
+                          className="block p-2 border-[1px] border-black mb-2 text-bold  -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600" >
+                            حركة الصنف
                         </a>
                       </li>
                     </ul>
