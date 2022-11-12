@@ -1,9 +1,36 @@
 "use client"
-import React from 'react'
+import { motion } from "framer-motion";
+import Backdrop from "./backdrop";
 import Select from 'react-select'
 
+const flip = {
+  hidden: {
+    transform: "scale(0)",
+    opacity: 0,
+    transition: {
+      delay: 0.3,
+      type: "spring",
+      damping: 25,
+      stiffness: 500,
+    },
+  },
+  visible: {
+    transform: " scale(1)",
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+    },
+  },
+  exit: {
+    transform: "scale(0) ",
+    opacity: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
 
-function AddItems() {
+
   const options = [
     { value: 'chocolate', label: 'عدد' },
     { value: 'strawberry', label: 'جم' },
@@ -18,8 +45,18 @@ function AddItems() {
    { value: 'strawberry', label: ' مخزن الزيوت' }
   ]
 
+const AddItem = ({ handleClose, text }) => {
+
   return (
-    <div className="mx-auto w-full justify-content shadow shadow-black p-5">
+    <Backdrop onClick={handleClose}>
+      <motion.div
+        onClick={(e) => e.stopPropagation()}
+        className="mx-auto container justify-content shadow shadow-black p-5 bg-white"
+        variants={flip}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
       <h1 className="text-3xl font-bold text-center">إضافة صنف جديد</h1>
       <form action="" className="mt-10 flex flex-col  items-center">
         <div className="grid gap-5 sm:grid-cols-8">
@@ -63,8 +100,10 @@ function AddItems() {
 
         <button type="submit" className="mt-5 rounded-md bg-black px-10 py-2 text-white">حفظ البيانات</button>
       </form>
-    </div>
-  )
-}
+      </motion.div>
+    </Backdrop>
+  );
+};
 
-export default AddItems
+
+export default AddItem;

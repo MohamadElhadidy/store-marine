@@ -10,7 +10,7 @@ export default function RootLayout({
       <head></head>
       <body>
         <Navbar/>
-        <main className="container mx-auto px-4 w-full py-6 flex  justify-center items-center h-[80vh]">
+        <main className="container mx-auto px-4 w-full py-6 flex  justify-center  h-[80vh]">
             {children}
         </main>
       </body>
