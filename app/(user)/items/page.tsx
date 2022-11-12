@@ -34,7 +34,8 @@ const defaultData: Item[] = [
     balance: 6,
     unit: "سم مربع",
     price: 50,
-    notes: "تم الجرد يوم 17 / 9 / 2019"
+    notes: "تم الجرد يوم 17 / 9 / 2019",
+    actions: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800" /></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button></div>
   },
 ]
 
@@ -74,7 +75,7 @@ const columns = [
   }),
   columnHelper.accessor('actions', {
     header: '',
-    cell: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800"/></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800"/></button></div>,
+    cell: info => info.getValue(),
     footer: '',
   }),
 ]
@@ -143,7 +144,7 @@ function Items() {
         initial={false}
         mode='wait'
       >
-        {modalOpen && <AddItem modalOpen={modalOpen} handleClose={close} text="Hi" />}
+        {modalOpen && <AddItem  handleClose={close} text="Hi" />}
       </AnimatePresence>
 
     </>
