@@ -22,7 +22,9 @@ import {
   rankItem,
 } from '@tanstack/match-sorter-utils'
 import Select from 'react-select'
-
+import { Item }  from './types'
+import { GetData} from './api'
+import Loading from '../../loading'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -40,119 +42,28 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 }
 
 
-type Item = {
-  id: number
-  code: string
-  name: string
-  type: string
-  balance: number
-  unit: string
-  price: number
-  notes: string
-  actions: any
-}
-
-const defaultData: Item[] = [
-  {
-    id: 5,
-    code: '1537',
-    name: "خرطوم طول 60 سم ، 2/1 بوصة ، عدل * كوع",
-    type: "قطع غيار",
-    balance: 6,
-    unit: "سم مربع",
-    price: 50,
-    notes: "تم الجرد يوم 17 / 9 / 2019",
-    actions: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800" /></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button></div>
-  },
-  {
-    id: 6,
-    code: '1536',
-    name: "خرطوم طول 60 سم ، 2/1 بوصة ، عدل * كوع",
-    type: "قطع غيار",
-    balance: 6,
-    unit: "سم مربع",
-    price: 50,
-    notes: "تم الجرد يوم 17 / 9 / 2019",
-    actions: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800" /></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button></div>
-  },
-  {
-    id: 6,
-    code: '1536',
-    name: "خرطوم طول 60 سم ، 2/1 بوصة ، عدل * كوع",
-    type: "قطع غيار",
-    balance: 6,
-    unit: "سم مربع",
-    price: 50,
-    notes: "تم الجرد يوم 17 / 9 / 2019",
-    actions: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800" /></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button></div>
-  },
-  {
-    id: 6,
-    code: '1536',
-    name: "خرطوم طول 60 سم ، 2/1 بوصة ، عدل * كوع",
-    type: "قطع غيار",
-    balance: 6,
-    unit: "سم مربع",
-    price: 50,
-    notes: "تم الجرد يوم 17 / 9 / 2019",
-    actions: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800" /></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button></div>
-  },
-  {
-    id: 6,
-    code: '1536',
-    name: "خرطوم طول 60 سم ، 2/1 بوصة ، عدل * كوع",
-    type: "قطع غيار",
-    balance: 6,
-    unit: "سم مربع",
-    price: 50,
-    notes: "تم الجرد يوم 17 / 9 / 2019",
-    actions: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800" /></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button></div>
-  },
-  {
-    id: 6,
-    code: '1536',
-    name: "خرطوم طول 60 سم ، 2/1 بوصة ، عدل * كوع",
-    type: "قطع غيار",
-    balance: 6,
-    unit: "سم مربع",
-    price: 50,
-    notes: "تم الجرد يوم 17 / 9 / 2019",
-    actions: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800" /></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button></div>
-  },
-  {
-    id: 6,
-    code: '1536',
-    name: "خرطوم طول 60 سم ، 2/1 بوصة ، عدل * كوع",
-    type: "قطع غيار",
-    balance: 6,
-    unit: "سم مربع",
-    price: 50,
-    notes: "تم الجرد يوم 17 / 9 / 2019",
-    actions: <div className="flex"><button className="cursor-pointer    ml-3 "><BiEdit className="text-2xl text-blue-800" /></button><button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button></div>
-  },
-
-]
 
 const columnHelper = createColumnHelper<Item>()
 
+
 const columns = [
   columnHelper.accessor('code', {
-    header: () => 'كود الصنف',
+    header :   'كود الصنف',
     cell: info => info.getValue(),
     footer: info => info.column.id,
   }),
   columnHelper.accessor('name', {
-    header: () => 'اسم الصنف',
+    header:   'اسم الصنف',
     cell: info => info.getValue(),
     footer: info => info.column.id,
   }),
   columnHelper.accessor('type', {
-    header: () => 'نوع الصنف',
+    header:   'نوع الصنف',
     cell: info => info.renderValue(),
     footer: info => info.column.id,
   }),
   columnHelper.accessor('balance', {
-    header: () => "الرصيد الحالي",
+    header:   "الرصيد الحالي",
     footer: info => info.column.id,
   }),
   columnHelper.accessor('unit', {
@@ -199,7 +110,7 @@ function DebouncedInput({
   }, [value])
 
   return (
-    <input {...props} value={value} onChange={e => setValue(e.target.value)} />
+    <input {...props} value={value} onChange={e => setValue(e.target.value)}  dir='auto'/>
   )
 }
 
@@ -211,9 +122,9 @@ function Filter({
   column: Column<any, unknown>
   table: Table<any>
 }) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
+  // const firstValue = table
+  //   .getPreFilteredRowModel()
+  //   .flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
 
@@ -224,7 +135,7 @@ function Filter({
   //       : Array.from(column.getFacetedUniqueValues().keys()).sort(),
   //   [column.getFacetedUniqueValues()]
   // )
-  return typeof firstValue === 'object' || column.id === 'balance' || column.id === 'unit' || column.id === 'price' || column.id === 'notes' ?  <></>:
+  return  column.id === 'actions' || column.id === 'balance' || column.id === 'unit' || column.id === 'price' || column.id === 'notes' ?  <></>:
     (
     <>
       {/* <datalist id={column.id + 'list'}>
@@ -245,8 +156,16 @@ function Filter({
   )
 }
 function Items() {
-  const [data, setData] = React.useState(() => [...defaultData])
-
+  
+  const [data, setData] = React.useState(() => [])
+  console.log(data)
+  React.useEffect(() => {
+    const get = async () => {
+      const result = await GetData()
+      setData(result?.items)
+    }
+    get()
+  }, [])
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState('')
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -254,7 +173,7 @@ function Items() {
   )
   const [columnVisibilityModel, setColumnVisibilityModel] = React.useState(false)
   const columnVisibilityRef = React.useRef(null);
- 
+
   const table = useReactTable({
     data,
      // @ts-ignore
@@ -273,6 +192,7 @@ function Items() {
     getFilteredRowModel: getFilteredRowModel()
 
   })
+
   React.useEffect(() => {
     const handleClickOutside = (event: Event) => {
        // @ts-ignore
@@ -288,17 +208,19 @@ function Items() {
 
 
   
-   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
+
   const option = [
     { value: '10', label: '10' },
     { value: '15', label: '15' },
     { value: '25', label: '25' },
     { value: '50', label: '50' },
     { value: '100', label: '100' }
-  ] 
+  ]
+
   return (
     <>
     <div className="py-1  container">
@@ -315,22 +237,24 @@ function Items() {
             <div className=" shadow  flex py-3 justify-between items-center">
               <div className='relative  px-4'>
                 <button onClick={() => setColumnVisibilityModel(!columnVisibilityModel)} className="bg-black text-white hover:bg-blue-800  text-sm font-bold 
-                 px-3 py-2  rounded-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">أظهر / أخفي الأعمده</button>
+                 px-3 py-2  rounded-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">تخصيص الأعمده</button>
                 
                 <div ref={columnVisibilityRef}  className={`absolute  ${columnVisibilityModel ? 'visible' : 'invisible'} px-3  flex flex-wrap w-[15rem] bg-white rounded-lg  shadow-black shadow-lg` }>
                   {table.getAllLeafColumns().map(column => {
+                    let header: any =  column.columnDef.header
+                    if (column.id === 'actions') header = 'الأدوات'
                     return (
                       <div key={column.id} className="px-1">
                         <label className='text-lg'>
                           <input
-                            className='w-4 h-4 text-blue-600 bg-gray-100 rounded-lg border-gray-300 cursor-pointer '
+                            className='w-6 h-4 text-blue-600 bg-gray-100 rounded-lg border-gray-300 cursor-pointer '
                             {...{
                               type: 'checkbox',
                               checked: column.getIsVisible(),
                               onChange: column.getToggleVisibilityHandler(),
                             }}
                           />{' '}
-                          {column.id}
+                          {header}
                         </label>
                       </div>
                     )
@@ -341,8 +265,9 @@ function Items() {
               <DebouncedInput
                   value={globalFilter ?? ''}
                   onChange={value => setGlobalFilter(String(value))}
-                  className="mx-4 px-3 py-2 font-lg    shadow-lg rounded-xl border-blue-500 border-2"
+                className="mx-4 px-3 py-2 font-lg    shadow-lg rounded-xl border-blue-500 border-2 text-center"
                   placeholder="ابحث في جميع الأعمده"
+                  
                 />
              
           </div>
@@ -353,33 +278,105 @@ function Items() {
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map(header => (
                       <th key={header.id} colSpan={header.colSpan} className="bg-black px-2 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-1  border-l-0 border-r-0 whitespace-nowrap font-semibold text-center text-lg text-white">
+                        {/* {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null} */}
                         {header.isPlaceholder
                           ? null
                           : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                        {header.column.getCanFilter() ? (
-                          <div>
-                            <Filter column={header.column} table={table} />
-                          </div>
-                        ) : null}
                       </th>
                     ))}
+                    <th className="bg-black px-2 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-1  border-l-0 border-r-0 whitespace-nowrap font-semibold text-center text-lg text-white"></th>
                   </tr>
                 ))}   
               </thead>
 
               <tbody>
-                {table.getRowModel().rows.map(row => (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map(cell => (
+                  { table.getHeaderGroups().map(headerGroup => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map(header => (
+                        <td key={header.id} className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 text-center font-bold">
+                          {header.column.getCanFilter() ? (
+                            <div>
+                              <Filter column={header.column} table={table} />
+                            </div>
+                          ) : null}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}   
+                  {data.length ? 
+                    table.getRowModel().rows.length ? 
+                  
+                   table.getRowModel().rows.map(row => (
+                    <tr key={row.id}>
+                      {row.getVisibleCells().map(cell => (
                       <td key={cell.id} className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 text-center font-bold">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
-                  </tr>
-                ))}
+                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 text-center font-bold"><div className="flex">
+                        <button className="cursor-pointer ml-3 "><BiEdit className="text-2xl text-blue-800" /></button>
+                        <button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button>
+                        </div></td>
+
+                    </tr>
+                    
+                 )) :
+                
+                  <td colSpan={8} className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-lg whitespace-nowrap p-4 text-center font-bold ">
+                      لا يوجد بيانات
+                    </td>
+                 :
+                   <tr>
+
+                    <td colSpan={8} className='relative h-[3.5rem]'>
+                      <svg className="absolute top-2 left-[50%] h-12 w-12 animate-spin stroke-blue-500" viewBox="0 0 256 256">
+                        <line x1="128" y1="32" x2="128" y2="64" stroke-linecap="round" stroke-linejoin="round" strokeWidth="24"></line>
+                        <line
+                          x1="195.9"
+                          y1="60.1"
+                          x2="173.3"
+                          y2="82.7"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          strokeWidth="24"></line>
+                        <line x1="224" y1="128" x2="192" y2="128" stroke-linecap="round" stroke-linejoin="round" strokeWidth="24"></line>
+                        <line
+                          x1="195.9"
+                          y1="195.9"
+                          x2="173.3"
+                          y2="173.3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          strokeWidth="24"></line>
+                        <line x1="128" y1="224" x2="128" y2="192" stroke-linecap="round" stroke-linejoin="round" strokeWidth="24"></line>
+                        <line
+                          x1="60.1"
+                          y1="195.9"
+                          x2="82.7"
+                          y2="173.3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          strokeWidth="24"></line>
+                        <line x1="32" y1="128" x2="64" y2="128" stroke-linecap="round" stroke-linejoin="round" strokeWidth="24"></line>
+                        <line
+                          x1="60.1"
+                          y1="60.1"
+                          x2="82.7"
+                          y2="82.7"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          strokeWidth="24"></line>
+                      </svg>
+                    </td>
+                   </tr>
+                 } 
               </tbody>
 
             </table>
