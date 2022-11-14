@@ -3,7 +3,6 @@ import React from 'react'
 import {
   Column,
   Table,
-  ColumnDef,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
@@ -13,19 +12,16 @@ import {
   ColumnFiltersState,
   getPaginationRowModel
 } from '@tanstack/react-table'
-import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion"
+import { AnimatePresence, useScroll, useSpring } from "framer-motion"
 import { useState } from 'react'
 import AddItem from './add'
 import { BiEdit } from 'react-icons/bi'
 import { RiDeleteBin5Fill } from 'react-icons/ri'
 
 import {
-  RankingInfo,
   rankItem,
-  compareItems,
 } from '@tanstack/match-sorter-utils'
 import Select from 'react-select'
-import { fabClasses } from '@mui/material'
 
 
 declare module '@tanstack/table-core' {
@@ -139,7 +135,7 @@ const defaultData: Item[] = [
 
 const columnHelper = createColumnHelper<Item>()
 
-const defaultColumns = [
+const columns = [
   columnHelper.accessor('code', {
     header: () => 'كود الصنف',
     cell: info => info.getValue(),
@@ -251,7 +247,6 @@ function Filter({
 }
 function Items() {
   const [data, setData] = React.useState(() => [...defaultData])
-  const [columns] = React.useState(() => [...defaultColumns])
 
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState('')
@@ -260,9 +255,10 @@ function Items() {
   )
   const [columnVisibilityModel, setColumnVisibilityModel] = React.useState(false)
   const columnVisibilityRef = React.useRef(null);
-
+ 
   const table = useReactTable({
     data,
+     // @ts-ignore
     columns, 
     onColumnFiltersChange: setColumnFilters,
     state: {
@@ -280,6 +276,7 @@ function Items() {
   })
   React.useEffect(() => {
     const handleClickOutside = (event: Event) => {
+       // @ts-ignore
       if (columnVisibilityRef.current && !columnVisibilityRef.current.contains(event.target)) {
         setColumnVisibilityModel(false)
       } 
@@ -391,12 +388,12 @@ function Items() {
             
           </div>
             <div className="flex items-center  justify-between">
-              <Select 
-                options={option}
-                // defaultValue={{ value: table.getState().pagination.pageSize, label: table.getState().pagination.pageSize }}
-                onChange={(e: Event) => { table.setPageSize(Number(e.value)) }}
+                <Select
+                  options={option}
+                   // @ts-ignore
+                  onChange={(e: Event) => { table.setPageSize(Number(e.value)) }}
 
-                className="font-[600] peer appearance-none   bg-white py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={false} placeholder={'اختر عدد الصفوف'} menuPlacement={"top"} />
+                  className="mr-4 font-[600] peer appearance-none   bg-white py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={false} placeholder={'اختر عدد الصفوف'} menuPlacement={"top"} />
               
 
               {/* <select
@@ -413,41 +410,53 @@ function Items() {
               </select> */}
 
               <div className='flex items-center  '>
-                <button
+                {/* <button
                   className="border rounded p-1"
                   onClick={() => table.setPageIndex(0)}
                   disabled={!table.getCanPreviousPage()}
                 >
                   {'<<'}
-                </button>
-                <button
+                </button> */}
+                {/* <button
                   className="border rounded p-1"
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
                 >
-                  {'<'}
+                  {'السابق'}
                 </button>
                 <button
                   className="border rounded p-1"
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
                 >
-                  {'>'}
-                </button>
-                <button
+                  {'التالي'}
+                </button> */}
+                {/* <button
                   className="border rounded p-1"
                   onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                   disabled={!table.getCanNextPage()}
                 >
                   {'>>'}
-                </button>
-                <span className="flex items-center gap-1">
-                  <div>Page</div>
-                  <strong>
-                    {table.getState().pagination.pageIndex + 1} of{' '}
-                    {table.getPageCount()}
-                  </strong>
+                </button> */}
+                <span className="flex items-center gap-1 ml-2">
+                  <div>إظهار    <strong> {table.getState().pagination.pageIndex + 1}  من   {table.getPageCount()} </strong></div>
                 </span>
+
+                <button
+                  className={`border rounded  mx-1 my-2 p-1  ${table.getCanPreviousPage()  ? 'text-black' : 'text-gray-400'}`}
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+
+                >
+                  {'السابق'}
+                </button>
+                <button
+                  className={`border rounded ml-3  mx-1 my-2 p-1  ${table.getCanNextPage() ? 'text-black' : 'text-gray-400'}`}
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  {'التالي'}
+                </button>
               </div>
 
               
