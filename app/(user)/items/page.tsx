@@ -224,8 +224,7 @@ function Filter({
   //       : Array.from(column.getFacetedUniqueValues().keys()).sort(),
   //   [column.getFacetedUniqueValues()]
   // )
-  console.log()
-  return typeof firstValue === 'object' || column.id === 'balance' || column.id === 'unit' || column.id === 'price' || column.id === 'notes' ?  '':
+  return typeof firstValue === 'object' || column.id === 'balance' || column.id === 'unit' || column.id === 'price' || column.id === 'notes' ?  <></>:
     (
     <>
       {/* <datalist id={column.id + 'list'}>
