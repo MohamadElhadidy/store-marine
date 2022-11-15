@@ -10,21 +10,24 @@ import {
   getFilteredRowModel,
   FilterFn,
   ColumnFiltersState,
-  getPaginationRowModel
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
 } from '@tanstack/react-table'
 import { AnimatePresence, useScroll, useSpring } from "framer-motion"
 import { useState } from 'react'
 import AddItem from './add'
 import { BiEdit } from 'react-icons/bi'
 import { RiDeleteBin5Fill } from 'react-icons/ri'
-
+import { AiFillPlusCircle } from 'react-icons/ai'
+import { FaHashtag } from 'react-icons/fa'
 import {
   rankItem,
 } from '@tanstack/match-sorter-utils'
 import Select from 'react-select'
 import { Item }  from './types'
 import { GetData} from './api'
-import Loading from '../../loading'
+import Delete from './delete'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -46,44 +49,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 const columnHelper = createColumnHelper<Item>()
 
 
-const columns = [
-  columnHelper.accessor('code', {
-    header :   'كود الصنف',
-    cell: info => info.getValue(),
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('name', {
-    header:   'اسم الصنف',
-    cell: info => info.getValue(),
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('type', {
-    header:   'نوع الصنف',
-    cell: info => info.renderValue(),
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('balance', {
-    header:   "الرصيد الحالي",
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('unit', {
-    header: 'الوحده',
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('price', {
-    header: 'السعر',
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('notes', {
-    header: 'ملاحظات',
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('actions', {
-    header: '',
-    cell: info => info.getValue(),
-    footer: '',
-  }),
-]
+
 
 function DebouncedInput({
   value: initialValue,
@@ -158,14 +124,18 @@ function Filter({
 function Items() {
   
   const [data, setData] = React.useState(() => [])
-  console.log(data)
+  const [id, setId] = React.useState({})
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const get = async () => {
+    const result = await GetData()
+    setData(result?.items)
+  }
+
   React.useEffect(() => {
-    const get = async () => {
-      const result = await GetData()
-      setData(result?.items)
-    }
     get()
   }, [])
+
+ 
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState('')
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -174,24 +144,78 @@ function Items() {
   const [columnVisibilityModel, setColumnVisibilityModel] = React.useState(false)
   const columnVisibilityRef = React.useRef(null);
 
+    console.log(globalFilter)
+
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('code', {
+      header: 'كود الصنف',
+      cell: info => info.getValue(),
+      footer: info => info.column.id,
+    }),
+    columnHelper.accessor('name', {
+      header: 'اسم الصنف',
+      cell: info => info.getValue(),
+      footer: info => info.column.id,
+    }),
+    columnHelper.accessor('type', {
+      header: 'نوع الصنف',
+      cell: info => info.renderValue(),
+      footer: info => info.column.id,
+    }),
+    columnHelper.accessor('balance', {
+      header: "الرصيد الحالي",
+      footer: info => info.column.id,
+    }),
+    columnHelper.accessor('unit', {
+      header: 'الوحده',
+      footer: info => info.column.id,
+    }),
+    columnHelper.accessor('price', {
+      header: 'السعر',
+      footer: info => info.column.id,
+    }),
+    columnHelper.accessor('notes', {
+      header: 'ملاحظات',
+      footer: info => info.column.id,
+    }),
+    columnHelper.accessor('actions', {
+      header: '',
+      cell: (props) => <div className="flex">
+        <button className="cursor-pointer ml-3 " onClick={() => console.log(props.row.original)}><BiEdit className="text-2xl text-blue-800" /></button>
+        <button onClick={() => { setModalDelete(true); setId({id: props.row.original.id, name : props.row.original.name}) }} className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button>
+      </div>,
+
+      footer: '',
+    }),
+  ]
+
   const table = useReactTable({
     data,
      // @ts-ignore
     columns, 
     onColumnFiltersChange: setColumnFilters,
     state: {
-      columnVisibility,
+      columnVisibility: {...columnVisibility, id: false },
       globalFilter,
-      columnFilters
+      columnFilters,
+      sorting
     },
     onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: fuzzyFilter,
     onGlobalFilterChange: setGlobalFilter,
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel()
 
   })
+
+  // const currentData = table.getRowModel().rows.map(row => row.getVisibleCells())
+  // console.log(currentData)
 
   React.useEffect(() => {
     const handleClickOutside = (event: Event) => {
@@ -210,15 +234,17 @@ function Items() {
   
   const [modalOpen, setModalOpen] = useState(false);
 
+  const [modalDelete, setModalDelete] = useState(false);
+
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
 
-  const option = [
-    { value: '10', label: '10' },
-    { value: '15', label: '15' },
-    { value: '25', label: '25' },
-    { value: '50', label: '50' },
-    { value: '100', label: '100' }
+  const options = [
+    { value: 10, label: '10' },
+    { value: 15, label: '15' },
+    { value: 25, label: '25' },
+    { value: 50, label: '50' },
+    { value: 100, label: '100' }
   ]
 
   return (
@@ -231,18 +257,27 @@ function Items() {
               <h3 className="font-semibold text-xl text-blueGray-700 underline underline-offset-[6px] decoration-blue-800 decoration-[4px]">تقرير الأصناف</h3>
               </div>
               <div className="relative  px-4">
-                <button  onClick={open} className="bg-black text-white hover:bg-blue-800  text-xs font-bold uppercase px-3 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">إضافة صنف</button>
+                <button  onClick={open} className="bg-black text-white hover:bg-blue-800   font-bold uppercase px-3 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 flex items-center justify-center" type="button"
+                >
+                <AiFillPlusCircle className='ml-2 text-xl'/>
+                  <span className='text-sm'>إضافة صنف</span>
+                </button>
               </div>
           </div>
             <div className=" shadow  flex py-3 justify-between items-center">
               <div className='relative  px-4'>
-                <button onClick={() => setColumnVisibilityModel(!columnVisibilityModel)} className="bg-black text-white hover:bg-blue-800  text-sm font-bold 
-                 px-3 py-2  rounded-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">تخصيص الأعمده</button>
+                <button onClick={() => setColumnVisibilityModel(!columnVisibilityModel)} className="bg-black text-white hover:bg-blue-800   font-bold 
+                 px-3 py-2  rounded-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 flex items-center justify-center" type="button"
+                 >
+                  <FaHashtag className='ml-2 text-xl' />
+                  <span className='text-sm'>تخصيص الأعمده</span>
+                 </button>
                 
                 <div ref={columnVisibilityRef}  className={`absolute  ${columnVisibilityModel ? 'visible' : 'invisible'} px-3  flex flex-wrap w-[15rem] bg-white rounded-lg  shadow-black shadow-lg` }>
                   {table.getAllLeafColumns().map(column => {
                     let header: any =  column.columnDef.header
                     if (column.id === 'actions') header = 'الأدوات'
+                    if (column.id !== 'id'){
                     return (
                       <div key={column.id} className="px-1">
                         <label className='text-lg'>
@@ -258,6 +293,7 @@ function Items() {
                         </label>
                       </div>
                     )
+                          }
                   })} 
                 </div>
             </div> 
@@ -283,12 +319,23 @@ function Items() {
                             <Filter column={header.column} table={table} />
                           </div>
                         ) : null} */}
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? 'cursor-pointer select-none'
+                            : '',
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
                       </th>
                     ))}
                     <th className="bg-black px-2 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-1  border-l-0 border-r-0 whitespace-nowrap font-semibold text-center text-lg text-white"></th>
@@ -310,7 +357,7 @@ function Items() {
                       ))}
                     </tr>
                   ))}   
-                  {data.length ? 
+                  {data?.length ? 
                     table.getRowModel().rows.length ? 
                   
                    table.getRowModel().rows.map(row => (
@@ -320,58 +367,61 @@ function Items() {
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
-                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 text-center font-bold"><div className="flex">
-                        <button className="cursor-pointer ml-3 "><BiEdit className="text-2xl text-blue-800" /></button>
-                        <button className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button>
-                        </div></td>
+
+                       {/* <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 text-center font-bold"><div className="flex">
+                          <button className="cursor-pointer ml-3 "><BiEdit className="text-2xl text-blue-800" /></button>
+                          <button onClick={() => setModalDelete(true)} className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button>
+                        </div>
+                        </td> */}
 
                     </tr>
                     
                  )) :
-                
+                <tr>
                   <td colSpan={8} className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-lg whitespace-nowrap p-4 text-center font-bold ">
                       لا يوجد بيانات
                     </td>
+                      </tr>
                  :
                    <tr>
 
                     <td colSpan={8} className='relative h-[3.5rem]'>
                       <svg className="absolute top-2 left-[50%] h-12 w-12 animate-spin stroke-blue-500" viewBox="0 0 256 256">
-                        <line x1="128" y1="32" x2="128" y2="64" stroke-linecap="round" stroke-linejoin="round" strokeWidth="24"></line>
+                        <line x1="128" y1="32" x2="128" y2="64" strokeLinecap="round" strokeLinejoin="round" strokeWidth="24"></line>
                         <line
                           x1="195.9"
                           y1="60.1"
                           x2="173.3"
                           y2="82.7"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           strokeWidth="24"></line>
-                        <line x1="224" y1="128" x2="192" y2="128" stroke-linecap="round" stroke-linejoin="round" strokeWidth="24"></line>
+                        <line x1="224" y1="128" x2="192" y2="128" strokeLinecap="round" strokeLinejoin="round" strokeWidth="24"></line>
                         <line
                           x1="195.9"
                           y1="195.9"
                           x2="173.3"
                           y2="173.3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           strokeWidth="24"></line>
-                        <line x1="128" y1="224" x2="128" y2="192" stroke-linecap="round" stroke-linejoin="round" strokeWidth="24"></line>
+                        <line x1="128" y1="224" x2="128" y2="192" strokeLinecap="round" strokeLinejoin="round" strokeWidth="24"></line>
                         <line
                           x1="60.1"
                           y1="195.9"
                           x2="82.7"
                           y2="173.3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           strokeWidth="24"></line>
-                        <line x1="32" y1="128" x2="64" y2="128" stroke-linecap="round" stroke-linejoin="round" strokeWidth="24"></line>
+                        <line x1="32" y1="128" x2="64" y2="128" strokeLinecap="round" strokeLinejoin="round" strokeWidth="24"></line>
                         <line
                           x1="60.1"
                           y1="60.1"
                           x2="82.7"
                           y2="82.7"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           strokeWidth="24"></line>
                       </svg>
                     </td>
@@ -385,11 +435,11 @@ function Items() {
           </div>
             <div className="flex items-center  justify-between">
                 <Select
-                  options={option}
-                   // @ts-ignore
-                  onChange={(e: Event) => { table.setPageSize(Number(e.value)) }}
+                  options={options}
+                  instanceId='page-size'
+                  onChange={(e) => { table.setPageSize(Number(e?.value)) }}
 
-                  className="mr-4 font-[600] peer appearance-none   bg-white py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={false} placeholder={'اختر عدد الصفوف'} menuPlacement={"top"} />
+                  className="mr-4 font-[600]   bg-white py-2.5 text-sm text-gray-900 focus:border-blue-600 " isSearchable={true} placeholder={'اختر عدد الصفوف'} menuPlacement={"top"} />
               
 
               {/* <select
@@ -480,7 +530,9 @@ function Items() {
         initial={false}
         mode='wait'
       >
-        {modalOpen && <AddItem  handleClose={close} text="Hi" />}
+        {modalDelete && <Delete handleClose={() => setModalDelete(false)} data={id} fetch={get} text="هل أنت متأكد من حذف الصنف ؟ " afterText='تم حذف الصنف بنجاح' />}
+
+        {modalOpen && <AddItem handleClose={close} text="Hi" fetch={get} />}
       </AnimatePresence>
 
     </>
