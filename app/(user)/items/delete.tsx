@@ -36,7 +36,7 @@ function Delete({ handleClose, text, data, fetch,afterText }) {
   const {id, name} = data
   const destroy = async()=>{
      setLoading(true)
-    const response = await DeleteData({id})
+    const response = await DeleteData(id)
     if(response){
       if (response.message){      
         fetch()

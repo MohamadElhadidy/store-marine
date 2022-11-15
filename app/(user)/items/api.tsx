@@ -48,7 +48,7 @@ export async function GetData() {
   }
 }
 
-export async function DeleteData({ id : any}) {
+export async function DeleteData(id : any) {
   try {
     const { data } = await axios.delete(
       `http://storeapi.marine-co.live/api/items/${id}`,
