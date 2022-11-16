@@ -47,7 +47,7 @@ const flip = {
   ]
 
   
-const AddItem = ({ handleClose, text, fetch }) => {
+const Add = ({ handleClose, text, fetch }) => {
   const [loading, setLoading] = React.useState(false)
   const [messages, setMessages] = React.useState(null)
   const code = React.useRef(null)
@@ -148,4 +148,4 @@ const AddItem = ({ handleClose, text, fetch }) => {
 };
 
 
-export default AddItem;
+export default Add;

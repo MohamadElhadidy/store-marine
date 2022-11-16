@@ -16,7 +16,7 @@ import {
 } from '@tanstack/react-table'
 import { AnimatePresence, useScroll, useSpring } from "framer-motion"
 import { useState } from 'react'
-import AddItem from './add'
+import Add from './add'
 import { BiEdit } from 'react-icons/bi'
 import { RiDeleteBin5Fill } from 'react-icons/ri'
 import { AiFillPlusCircle } from 'react-icons/ai'
@@ -28,6 +28,7 @@ import Select from 'react-select'
 import { Item }  from './types'
 import { GetData} from './api'
 import Delete from './delete'
+import Edit from './edit'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -122,7 +123,6 @@ function Filter({
   )
 }
 function Items() {
-  
   const [data, setData] = React.useState(() => [])
   const [id, setId] = React.useState({})
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -184,7 +184,7 @@ function Items() {
     columnHelper.accessor('actions', {
       header: '',
       cell: (props) => <div className="flex">
-        <button className="cursor-pointer ml-3 " onClick={() => console.log(props.row.original)}><BiEdit className="text-2xl text-blue-800" /></button>
+        <button className="cursor-pointer ml-3 " onClick={() => { setModalEdit(true); setId({ id: props.row.original.id }) }}><BiEdit className="text-2xl text-blue-800" /></button>
         <button onClick={() => { setModalDelete(true); setId({id: props.row.original.id, name : props.row.original.name}) }} className="cursor-pointer"><RiDeleteBin5Fill className="text-2xl text-red-800" /></button>
       </div>,
 
@@ -213,6 +213,7 @@ function Items() {
     getFilteredRowModel: getFilteredRowModel()
 
   })
+  console.log(table.getPageCount())
 
   // const currentData = table.getRowModel().rows.map(row => row.getVisibleCells())
   // console.log(currentData)
@@ -235,6 +236,8 @@ function Items() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const [modalDelete, setModalDelete] = useState(false);
+
+  const [modalEdit, setModalEdit] = useState(false);
 
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
@@ -438,7 +441,7 @@ function Items() {
                   options={options}
                   instanceId='page-size'
                   onChange={(e) => { table.setPageSize(Number(e?.value)) }}
-
+                // value={{ label: table.pageS, value: table.setPageSize}}
                   className="mr-4 font-[600]   bg-white py-2.5 text-sm text-gray-900 focus:border-blue-600 " isSearchable={true} placeholder={'اختر عدد الصفوف'} menuPlacement={"top"} />
               
 
@@ -531,8 +534,9 @@ function Items() {
         mode='wait'
       >
         {modalDelete && <Delete handleClose={() => setModalDelete(false)} data={id} fetch={get} text="هل أنت متأكد من حذف الصنف ؟ " afterText='تم حذف الصنف بنجاح' />}
+        {modalEdit && <Edit handleClose={() => setModalEdit(false)} data={id} fetch={get}/>}
 
-        {modalOpen && <AddItem handleClose={close} text="Hi" fetch={get} />}
+        {modalOpen && <Add handleClose={close} text="Hi" fetch={get} />}
       </AnimatePresence>
 
     </>

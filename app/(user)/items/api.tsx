@@ -1,4 +1,4 @@
-import { Item, NewItem } from './types'
+import {NewItem, UpdateItem } from './types'
 import axios from 'axios';
 
 export async function SendData({ code, name, balance, unit, price, end, type, store, notes }: NewItem) {
@@ -52,6 +52,52 @@ export async function DeleteData(id : any) {
   try {
     const { data } = await axios.delete(
       `http://storeapi.marine-co.live/api/items/${id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      },
+    );
+    // console.log(data)
+    return data
+  } catch (error: any) {
+    if (error.code === 'ERR_NETWORK') {
+      return 'يوجد مشكلة في الإنترنت';
+    }
+    else if (axios.isAxiosError(error)) {
+      return error.response?.data.message;
+    } else {
+      return 'يرجى المحاولة مرة أخرى';
+    }
+  }
+}
+
+export async function EditData(id: any) {
+  try {
+    const { data } = await axios.get(
+      `http://storeapi.marine-co.live/api/items/${id}/edit`,
+    );
+    // console.log(data)
+    return data
+  } catch (error: any) {
+    if (error.code === 'ERR_NETWORK') {
+      return 'يوجد مشكلة في الإنترنت';
+    }
+    else if (axios.isAxiosError(error)) {
+      return error.response?.data.message;
+    } else {
+      return 'يرجى المحاولة مرة أخرى';
+    }
+  }
+}
+
+export async function UpdateData({ id, code, name, balance, unit, price, end, type, store, notes }: UpdateItem) {
+  const dt = { code, name, balance, unit, price, end, type, store, notes }
+  try {
+    const { data } = await axios.put<UpdateItem>(
+      `http://storeapi.marine-co.live/api/items/${id}`,
+      { ...dt },
       {
         headers: {
           'Content-Type': 'application/json',

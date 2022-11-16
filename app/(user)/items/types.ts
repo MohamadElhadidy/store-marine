@@ -21,3 +21,16 @@ export type NewItem = {
   store: number
   notes: string
 }
+
+export type UpdateItem = {
+  id:number,
+  code: string
+  name: string
+  type: string
+  balance: number
+  unit: string
+  price: number
+  end: number
+  store: number
+  notes: string
+}
