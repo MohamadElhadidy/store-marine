@@ -2,7 +2,7 @@
 import React from 'react'
 import { GetData } from '../api'
 import Loading from '../../../loading'
-function Print({ params: any, searchParams: any }) {
+function Print({ params, searchParams }: { params: any; searchParams: any }) {
   const [data, setData] = React.useState(() => [])
 
   const get = async () => {
@@ -49,7 +49,7 @@ function Print({ params: any, searchParams: any }) {
         </thead>
 
         <tbody>
-          {data.map(row => 
+          {data.map((row:any) => 
             <tr key={row.id}>
               <td className=" align-middle text-xs whitespace-nowrap  text-center font-bold border border-solid border-black">
               {row.code}
