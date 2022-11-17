@@ -2,7 +2,7 @@
 import React from 'react'
 import { GetData } from '../api'
 import Loading from '../../../loading'
-function Print({ params, searchParams }) {
+function Print({ params: any, searchParams: any }) {
   const [data, setData] = React.useState(() => [])
 
   const get = async () => {
