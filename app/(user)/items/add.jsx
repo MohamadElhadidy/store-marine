@@ -4,6 +4,8 @@ import Backdrop from "./backdrop";
 import Select from 'react-select'
 import React from 'react'
 import { SendData } from "./api";
+import { units, types, stores } from "./lists"
+
 const flip = {
   hidden: {
     transform: "scale(0)",
@@ -31,20 +33,6 @@ const flip = {
   },
 };
 
-
-  const options = [
-    { value: 1, label: 'عدد' },
-    { value: 2, label: 'جم' },
-    { value: 3, label: 'كم' }
-  ] 
-  const options2 = [
-    { value: 1, label: 'قطع الغيار' },
-    { value: 2, label: 'الزيوت' }
-  ]
- const options3 = [
-   { value: 1, label: ' مخزن قطع الغيار' },
-   { value: 2, label: ' مخزن الزيوت' }
-  ]
 
   
 const Add = ({ handleClose, text, fetch }) => {
@@ -107,7 +95,7 @@ const Add = ({ handleClose, text, fetch }) => {
           </div>
 
           <div className="relative z-2 col-span-2">
-              <Select ref={unit} className=" font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={options} placeholder={'اختر الوحدة'} />
+              <Select ref={unit} className=" font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={units} placeholder={'اختر الوحدة'} />
           </div>
           <div className="relative z-0 col-span-3">
               <input dir="auto" type="text" ref={price} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />
@@ -119,10 +107,10 @@ const Add = ({ handleClose, text, fetch }) => {
           </div>
   
           <div className="relative z-1 col-span-2">
-              <Select ref={type}  className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={options2} placeholder={'اختر  نوع الصنف'} />
+              <Select ref={type} className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={types} placeholder={'اختر  نوع الصنف'} />
           </div>
           <div className="relative z-1 col-span-3">
-              <Select ref={store}  className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={options3} placeholder={'اختر  المخزن '} />
+              <Select ref={store} className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={stores} placeholder={'اختر  المخزن '} />
           </div>
           <div className="relative z-0 col-span-3">
               <input dir="auto" type="text" ref={notes} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />

@@ -4,6 +4,8 @@ import Backdrop from "./backdrop";
 import Select from 'react-select'
 import React from 'react'
 import { EditData, UpdateData } from "./api";
+import { units, types, stores } from "./lists"
+
 const flip = {
   hidden: {
     transform: "scale(0)",
@@ -31,21 +33,6 @@ const flip = {
   },
 };
 
-
-const options = [
-  { value: 1, label: 'عدد' },
-  { value: 2, label: 'جم' },
-  { value: 3, label: 'كم' },
-  { value: 4, label: 'متر' }
-]
-const options2 = [
-  { value: 1, label: 'قطع الغيار' },
-  { value: 2, label: 'الزيوت' }
-]
-const options3 = [
-  { value: 1, label: ' مخزن قطع الغيار' },
-  { value: 2, label: ' مخزن الزيوت' }
-]
 
 
 const Edit = ({ handleClose, fetch, data }) => {
@@ -171,8 +158,8 @@ const Edit = ({ handleClose, fetch, data }) => {
                 </div>
 
                 <div className="relative z-2 col-span-2">
-                <Select ref={unit} isDisabled={loadingData} value={options.find((e) => e.value == item?.unit)} 
-                onChange={value => handleChangeUnit(value)} className=" font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={options} placeholder={'اختر الوحدة'} />
+                <Select ref={unit} isDisabled={loadingData} value={units.find((e) => e.value == item?.unit)} 
+                  onChange={value => handleChangeUnit(value)} className=" font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={units} placeholder={'اختر الوحدة'} />
                 </div>
                 <div className="relative z-0 col-span-3">
                 <input dir="auto" type="text" disabled={loadingData}  ref={price}  defaultValue={item ? item?.price : ''} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />
@@ -184,10 +171,10 @@ const Edit = ({ handleClose, fetch, data }) => {
                 </div>
 
                 <div className="relative z-1 col-span-2">
-                <Select ref={type} isDisabled={loadingData} onChange={value => handleChangeType(value)} value={options2.find((e) => e.value == item?.type)} className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={options2} placeholder={'اختر  نوع الصنف'} />
+                <Select ref={type} isDisabled={loadingData} onChange={value => handleChangeType(value)} value={types.find((e) => e.value == item?.type)} className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={types} placeholder={'اختر  نوع الصنف'} />
                 </div>
                 <div className="relative z-1 col-span-3">
-                <Select ref={store} isDisabled={loadingData} onChange={value => handleChangeStore(value)}  value={options3.find((e) => e.value == item?.store)} className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={options3} placeholder={'اختر  المخزن '} />
+                <Select ref={store} isDisabled={loadingData} onChange={value => handleChangeStore(value)} value={stores.find((e) => e.value == item?.store)} className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={stores} placeholder={'اختر  المخزن '} />
                 </div>
                 <div className="relative z-0 col-span-3">
                 <input dir="auto" type="text" ref={notes} disabled={loadingData} defaultValue={item ? item?.notes : ''} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />

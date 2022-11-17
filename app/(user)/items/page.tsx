@@ -21,10 +21,12 @@ import { BiEdit } from 'react-icons/bi'
 import { RiDeleteBin5Fill } from 'react-icons/ri'
 import { AiFillPlusCircle } from 'react-icons/ai'
 import { FaHashtag } from 'react-icons/fa'
+import { BsFillPrinterFill } from 'react-icons/bs'
 import {
   rankItem,
 } from '@tanstack/match-sorter-utils'
 import Select from 'react-select'
+import Link from 'next/link'
 import { Item }  from './types'
 import { GetData} from './api'
 import Delete from './delete'
@@ -126,6 +128,7 @@ function Items() {
   const [data, setData] = React.useState(() => [])
   const [id, setId] = React.useState({})
   const [sorting, setSorting] = React.useState<SortingState>([])
+
   const get = async () => {
     const result = await GetData()
     setData(result?.items)
@@ -135,7 +138,8 @@ function Items() {
     get()
   }, [])
 
- 
+
+
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState('')
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -213,7 +217,7 @@ function Items() {
     getFilteredRowModel: getFilteredRowModel()
 
   })
-  console.log(table.getPageCount())
+  // console.log(table.getPageCount())
 
   // const currentData = table.getRowModel().rows.map(row => row.getVisibleCells())
   // console.log(currentData)
@@ -247,7 +251,8 @@ function Items() {
     { value: 15, label: '15' },
     { value: 25, label: '25' },
     { value: 50, label: '50' },
-    { value: 100, label: '100' }
+    { value: 100, label: '100' },
+    { value: 'All', label: 'الكل' }
   ]
 
   return (
@@ -265,16 +270,27 @@ function Items() {
                 <AiFillPlusCircle className='ml-2 text-xl'/>
                   <span className='text-sm'>إضافة صنف</span>
                 </button>
+              
               </div>
           </div>
             <div className=" shadow  flex py-3 justify-between items-center">
-              <div className='relative  px-4'>
-                <button onClick={() => setColumnVisibilityModel(!columnVisibilityModel)} className="bg-black text-white hover:bg-blue-800   font-bold 
-                 px-3 py-2  rounded-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 flex items-center justify-center" type="button"
-                 >
-                  <FaHashtag className='ml-2 text-xl' />
-                  <span className='text-sm'>تخصيص الأعمده</span>
-                 </button>
+              <div className='relative  px-4 '>
+                <div className='flex'>
+
+                  <button onClick={() => setColumnVisibilityModel(!columnVisibilityModel)} className="bg-black text-white hover:bg-blue-800   font-bold 
+                  px-3 py-2  rounded-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 flex items-center justify-center" type="button"
+                  >
+                    <FaHashtag className='ml-2 text-xl' />
+                    <span className='text-sm'>تخصيص الأعمده</span>
+                  </button>
+                  <Link  href={`/items/${table?.getState()?.pagination?.pageSize}`} target='_blank' className="bg-black text-white hover:bg-blue-800   font-bold 
+                  px-3 py-2  rounded-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 flex items-center justify-center" type="button"
+                  >
+                    <BsFillPrinterFill className='ml-2 text-xl' />
+                    <span className='text-sm'>طباعة</span>
+                  </Link>
+                
+                </div>
                 
                 <div ref={columnVisibilityRef}  className={`absolute  ${columnVisibilityModel ? 'visible' : 'invisible'} px-3  flex flex-wrap w-[15rem] bg-white rounded-lg  shadow-black shadow-lg` }>
                   {table.getAllLeafColumns().map(column => {
@@ -361,7 +377,7 @@ function Items() {
                     </tr>
                   ))}   
                   {data?.length ? 
-                    table.getRowModel().rows.length ? 
+                    table.getRowModel()?.rows?.length ? 
                   
                    table.getRowModel().rows.map(row => (
                     <tr key={row.id}>
@@ -440,7 +456,11 @@ function Items() {
                 <Select
                   options={options}
                   instanceId='page-size'
-                  onChange={(e) => { table.setPageSize(Number(e?.value)) }}
+                defaultValue={options[0]}
+                  onChange={(e) => { 
+                    e?.value === 'All' ?
+                      table.setPageSize(Number(data?.length)) : table.setPageSize(Number(e?.value))
+                    }}
                 // value={{ label: table.pageS, value: table.setPageSize}}
                   className="mr-4 font-[600]   bg-white py-2.5 text-sm text-gray-900 focus:border-blue-600 " isSearchable={true} placeholder={'اختر عدد الصفوف'} menuPlacement={"top"} />
               
@@ -488,21 +508,21 @@ function Items() {
                   {'>>'}
                 </button> */}
                 <span className="flex items-center gap-1 ml-2">
-                  <div>إظهار    <strong> {table.getState().pagination.pageIndex + 1}  من   {table.getPageCount()} </strong></div>
+                  <div>إظهار    <strong> {table?.getState().pagination.pageIndex + 1}  من   {table?.getPageCount()} </strong></div>
                 </span>
 
                 <button
-                  className={`border rounded  mx-1 my-2 p-1  ${table.getCanPreviousPage()  ? 'text-black' : 'text-gray-400'}`}
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
+                  className={`border rounded  mx-1 my-2 p-1  ${table?.getCanPreviousPage()  ? 'text-black' : 'text-gray-400'}`}
+                  onClick={() => table?.previousPage()}
+                  disabled={!table?.getCanPreviousPage()}
 
                 >
                   {'السابق'}
                 </button>
                 <button
-                  className={`border rounded ml-3  mx-1 my-2 p-1  ${table.getCanNextPage() ? 'text-black' : 'text-gray-400'}`}
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
+                  className={`border rounded ml-3  mx-1 my-2 p-1  ${table?.getCanNextPage() ? 'text-black' : 'text-gray-400'}`}
+                  onClick={() => table?.nextPage()}
+                  disabled={!table?.getCanNextPage()}
                 >
                   {'التالي'}
                 </button>
