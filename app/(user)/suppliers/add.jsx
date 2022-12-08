@@ -45,25 +45,20 @@ const Add = ({ handleClose }) => {
   const queryClient = useQueryClient()
   const code = React.useRef(null)
   const name = React.useRef(null)
-  const type = React.useRef(null)
-  const balance = React.useRef(null)
-  const price = React.useRef(null)
-  const unit = React.useRef(null)
   const notes = React.useRef(null)
-  const end = React.useRef(null)
   const store = React.useRef(null)
 
 
   const submit =  async (e)=>{
     e.preventDefault();
     setLoading(true)
-    const result = await SendData({ code: code.current.value, name: name.current.value, balance: balance.current.value, unit: unit.current?.getValue()[0]?.value, price: price.current.value, end: end.current.value, type: type.current?.getValue()[0]?.value, store: store.current?.getValue()[0]?.value, notes: notes.current.value })
+    const result = await SendData({ code: code.current.value, name: name.current.value ,store: store.current?.getValue()[0]?.value, notes: notes.current.value })
     if(result){
       if (!result.message){
         setMessages({ message: result, status: false })
       }else{
         setMessages({ message: result.message, status: true })
-        queryClient.invalidateQueries(['items'])
+        queryClient.invalidateQueries(['suppliers'])
       }
     }
     setLoading(false) 
@@ -82,46 +77,30 @@ const Add = ({ handleClose }) => {
           <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
           <span className="sr-only">Close modal</span>
         </button>
-      <h1 className="text-3xl font-bold text-center">إضافة صنف جديد</h1>
+      <h1 className="text-3xl font-bold text-center">إضافة مورد جديد</h1>
         <h3 className={`text-xl ${messages?.message && messages.status ? "text-green-600" : "text-red-600"} text-center  font-bold mt-5`}>{messages?.message && messages.message}</h3>
       <form action="" className="mt-10 flex flex-col  items-center" onSubmit={submit}>
-        <div className="grid gap-5 sm:grid-cols-8">
-          <div className="relative z-0 col-span-2">
+        <div className="grid gap-5 sm:grid-cols-6">
+          <div className="relative z-0 col-span-3">
               <input dir="auto" type="text" ref={code} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />
-              <label className="font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500">كود الصنف</label>
+              <label className="font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500">كود المورد</label>
           </div>
           <div className="relative z-0 col-span-3">
               <input dir="auto" type="text" ref={name} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />
-            <label className="font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500">اسم الصنف</label>
+            <label className="font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500">اسم المورد</label>
           </div>
-          <div className="relative z-0 col-span-3">
-              <input dir="auto" type="text" ref={balance} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />
-            <label className="font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500">رصيد أول المدة</label>
-          </div>
-
-          <div className="relative z-2 col-span-2">
-              <Select ref={unit} className=" font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={units} placeholder={'اختر الوحدة'} />
-          </div>
-          <div className="relative z-0 col-span-3">
-              <input dir="auto" type="text" ref={price} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />
-              <label className="text-center font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500"> سعر الوحدة </label>
-          </div>
-          <div className="relative z-0 col-span-3">
-              <input dir="auto" type="text" ref={end} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />
-            <label className="font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500"> حد الطلب </label>
-          </div>
-  
-          <div className="relative z-1 col-span-2">
-              <Select ref={type} className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={types} placeholder={'اختر  نوع الصنف'} />
-          </div>
-          <div className="relative z-1 col-span-3">
+        
+        </div>
+          <div className="grid gap-5 sm:grid-cols-6">
+            <div className="relative z-1 col-span-3">
               <Select ref={store} className="font-[600] peer block w-full appearance-none   bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" isSearchable={true} isClearable={true} isRtl={true} options={stores} placeholder={'اختر  المخزن '} />
-          </div>
-          <div className="relative z-0 col-span-3">
+            </div>
+            <div className="relative z-0 col-span-3">
               <input dir="auto" type="text" ref={notes} className="text-center font-[600] peer block w-full appearance-none border-0 border-b border-gray-500 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0" placeholder=" " />
-            <label className="font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500">ملاحظات</label>
+              <label className="font-bold absolute top-3 -z-10 origin-[0] -translate-y-6 scale-85 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:right-0 peer-focus:-translate-y-6 peer-focus:scale-90  peer-focus:text-blue-500"> مجال التعامل</label>
+            </div>
+        
           </div>
-        </div>   
           <div className="flex mt-5 ">
             <button type="submit" className={` relative rounded-md bg-green-800 ${loading ? "pl-10 pr-3": "px-5" }  py-2 text-white flex items-center z-0 ml-3 hover:bg-green-700`} disabled={loading}>
               حفظ البيانات

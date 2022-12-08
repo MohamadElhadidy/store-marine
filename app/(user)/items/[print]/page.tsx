@@ -2,14 +2,14 @@
 import React from 'react'
 import { GetData } from '../api'
 import Loading from '../../../loading'
-function Print({ params }: {
-  params: { print: number }
-}) {
+function Print(props :any) {
   const [data, setData] = React.useState(() => [])
+  // const obj = JSON.parse(props.searchParams.data);
 
+  console.log(props.searchParams.data)
   const get = async () => {
-    const result = await GetData()
-    setData(result?.items?.slice(0, params.print))
+    // const result = await GetData()
+    // setData(params.print)
   }
 
   React.useEffect(() => {
@@ -75,8 +75,6 @@ function Print({ params }: {
                 {row.notes}
             </td>
           </tr>
-          
-        
           ) }
 
 

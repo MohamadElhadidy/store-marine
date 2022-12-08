@@ -114,7 +114,7 @@ declare module '@tanstack/table-core' {
     //       : Array.from(column.getFacetedUniqueValues().keys()).sort(),
     //   [column.getFacetedUniqueValues()]
     // )
-    return column.id === 'actions' || column.id === 'balance' || column.id === 'unit' || column.id === 'price' || column.id === 'notes' ? <></> :
+    return column.id === 'actions' || column.id === 'notes' ? <></> :
       (
         <>
           {/* <datalist id={column.id + 'list'}>
@@ -134,9 +134,9 @@ declare module '@tanstack/table-core' {
         </>
       )
   }
-  function Items() {
-    const queryClient = useQueryClient()
-    const [items, setItems] = React.useState(() => []);
+function Suppliers() {
+    // const queryClient = useQueryClient()
+    const [suppliers, setSuppliers] = React.useState(() => []);
     const [id, setId] = React.useState({});
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -149,10 +149,10 @@ declare module '@tanstack/table-core' {
     //   get();
     // }, []);
 
-    const { isLoading, error, data, isFetching } = useQuery(['items'], GetData,{
+    const { isLoading, error, data, isFetching } = useQuery(['suppliers'], GetData,{
         onSuccess: (data) => {
           console.log(data)
-            setItems(data?.items)
+        setSuppliers(data?.suppliers)
         }
       }
     )
@@ -172,34 +172,17 @@ declare module '@tanstack/table-core' {
         cell: info => info.getValue(),
       }),
       columnHelper.accessor('code', {
-        header: 'كود الصنف',
+        header: 'كود المورد',
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('name', {
-        header: 'اسم الصنف',
+        header: 'اسم المورد',
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('type', {
-        header: 'نوع الصنف',
-        cell: info => info.renderValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('balance', {
-        header: "الرصيد الحالي",
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('unit', {
-        header: 'الوحده',
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('price', {
-        header: 'السعر',
-        footer: info => info.column.id,
-      }),
       columnHelper.accessor('notes', {
-        header: 'ملاحظات',
+        header: 'مجال التعامل ',
         footer: info => info.column.id,
       }),
       columnHelper.accessor('actions', {
@@ -215,7 +198,7 @@ declare module '@tanstack/table-core' {
 
 
     const table = useReactTable({
-      data: items,
+      data: suppliers,
       // @ts-ignore
       columns,
       onColumnFiltersChange: setColumnFilters,
@@ -273,13 +256,13 @@ declare module '@tanstack/table-core' {
             <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded  ">
               <div className="rounded-t mb-0 px-4 py-3 border-0 flex flex-wrap items-center justify-between w-full ">
                 <div className="relative  px-4">
-                  <h3 className="font-semibold text-xl text-blueGray-700 underline underline-offset-[6px] decoration-blue-800 decoration-[4px]">تقرير الأصناف</h3>
+                  <h3 className="font-semibold text-xl text-blueGray-700 underline underline-offset-[6px] decoration-blue-800 decoration-[4px]">تقرير الموردين</h3>
                 </div>
                 <div className="relative  px-4">
                   <button onClick={open} className="bg-black text-white hover:bg-blue-800   font-bold uppercase px-3 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 flex items-center justify-center" type="button"
                   >
                     <AiFillPlusCircle className='ml-2 text-xl' />
-                    <span className='text-sm'>إضافة صنف</span>
+                    <span className='text-sm'>إضافة مورد</span>
                   </button>
 
                 </div>
@@ -397,19 +380,14 @@ declare module '@tanstack/table-core' {
                     {!isLoading  ?
                       table.getRowModel()?.rows?.length ?
                         <>
-                        
                           {
-                            
                             table.getRowModel().rows.map(row => {
                             return (
-                              <tr key={row.id}>
-                              
+                              <tr key={row.id} className="  border-0  border-l-0 border-r-0  ">
                                 {row.getVisibleCells().map(cell =>{
-                                
                               return  (
                                 <>
-                                    
-                                    <td key={cell.id} className="border-t-0 p-0 align-middle border-l-0 border-r-0 text-sm  text-center font-bold">
+                                  <td key={cell.id} className=" p-0 align-middle border-t-0   border-l-0 border-r-0   text-sm  text-center font-bold">
                                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </td>
                                 </>
@@ -428,8 +406,8 @@ declare module '@tanstack/table-core' {
                         </>
 
                         :
-                        !items.length && !isFetching && 
-                       <tr>
+                        !suppliers.length && !isFetching && 
+                        <tr>
                           <td colSpan={8} className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-lg whitespace-nowrap p-4 text-center font-bold ">
                             لا يوجد بيانات
                           </td>
@@ -584,7 +562,7 @@ declare module '@tanstack/table-core' {
           initial={false}
           mode='wait'
         >
-          {modalDelete && <Delete handleClose={() => setModalDelete(false)} data={id} text="هل أنت متأكد من حذف الصنف ؟ " afterText='تم حذف الصنف بنجاح' />}
+          {modalDelete && <Delete handleClose={() => setModalDelete(false)} data={id} text="هل أنت متأكد من حذف المورد ؟ " afterText='تم حذف المورد بنجاح' />}
           {modalEdit && <Edit handleClose={() => setModalEdit(false)} data={id}  />}
 
           {modalOpen && <Add handleClose={close}/>}
@@ -595,4 +573,4 @@ declare module '@tanstack/table-core' {
     
   }
 
-  export default Items
+export default Suppliers

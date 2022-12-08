@@ -5,6 +5,7 @@ import Select from 'react-select'
 import React from 'react'
 import { EditData, UpdateData } from "./api";
 import { units, types, stores } from "./lists"
+import { useQueryClient } from '@tanstack/react-query'
 
 const flip = {
   hidden: {
@@ -35,7 +36,7 @@ const flip = {
 
 
 
-const Edit = ({ handleClose, fetch, data }) => {
+const Edit = ({ handleClose, data }) => {
   const [loading, setLoading] = React.useState(false)
   const [messages, setMessages] = React.useState(null)
   const [loadingData, seLoadingData] = React.useState(true)
@@ -50,6 +51,8 @@ const Edit = ({ handleClose, fetch, data }) => {
   const notes = React.useRef(null)
   const end = React.useRef(null)
   const store = React.useRef(null)
+  // Get QueryClient from the context
+  const queryClient = useQueryClient()
 
   const getItem = async(id)=>{
     const response = await EditData(id);
@@ -78,7 +81,7 @@ const Edit = ({ handleClose, fetch, data }) => {
         setMessages({ message: result, status: false })
       } else {
         setMessages({ message: result.message, status: true })
-        fetch()
+        queryClient.invalidateQueries(['items'])
       }
     }
     setLoading(false)

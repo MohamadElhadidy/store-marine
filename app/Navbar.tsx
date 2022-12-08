@@ -27,18 +27,19 @@ export default function Navbar() {
 
                       </li>
                       <li>
-                        <a href="#"
+                        
+                        <Link href="/suppliers"
                           className="block border-[1px] mb-2  border-black  p-2 -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600">
                             الموردين
                           <p className="text-gray-500 font-normal"> لإضافة - تعديل - حذف الموردين</p>
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a href="#"
+                        <Link href="/workshops"
                           className="block border-[1px]  border-black  p-2 -mx-1 rounded-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-pink-50 hover:via-blue-50 transition ease-in-out duration-300 text-gray-800 font-bold hover:text-blue-600">
                           الورش الخارجية
                           <p className="text-gray-500 font-normal"> لإضافة - تعديل - حذف الورش الخارجية</p>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
